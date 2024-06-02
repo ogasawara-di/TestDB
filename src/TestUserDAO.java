@@ -5,53 +5,31 @@ import java.sql.SQLException;
 
 public class TestUserDAO {
 
-		String name = "";
-		String password = "";
-	public void select(String name,String password) {
-		DBConnector db = new DBConnector();
-		Connection con = db.getConnection();
+    public void select(String name, String password) {
+        DBConnector db = new DBConnector();
+        Connection con = db.getConnection();
 
-		String sql ="select * from test_table where user_name=? and password=?";
-		try {
-		 	PreparedStatement ps = con.prepareStatement(sql);
-		 	ps.setString(1, name);
-		 	ps.setString (2, password);
-		 	ResultSet rs=ps.executeQuery();
-		 	if (rs.next()) {
-		 		System.out.println(rs.getString("user_name"));
-		 		System.out.println(rs.getString("password"));
-		 	}
-		} catch (SQLException e ) {
-		 e.printStackTrace();
-}
-try {
-		con.close() ;
-	} catch (SQLException e ) {
-		e.printStackTrace();
-	}
-	}
+        String sql = "SELECT * FROM test_table WHERE user_name = ? AND password = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, password);
 
-
-
-public void selectAll() {
-	 DBConnector db = new DBConnector();
-	 Connection con = db.getConnection();
-
-	 String sql ="select * from test_table";
-	 try {
-		 PreparedStatement ps = con.prepareStatement(sql);
-		 ResultSet rs=ps.executeQuery();
-		 while (rs.next()) {
-			 System.out.println(rs.getString("user_name"));
-			 System.out.println(rs.getString("password"));
-		 }
-	 } catch (SQLException e ) {
-		 e.printStackTrace();
-	}
-	try {
-		con.close() ;
-	 } catch (SQLException e ) {
-		 e.printStackTrace();
-	 }
-	 }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println(rs.getString("user_name"));
+                    System.out.println(rs.getString("password"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (con != null && !con.isClosed()) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
