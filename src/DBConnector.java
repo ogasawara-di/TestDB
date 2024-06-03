@@ -3,17 +3,21 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnector {
+	private static String driverName = "com.mysql.jdbc.Driver";
+	private static String url = "jdbc:mysql://localhost:3306/testdb";
+	private static String user = "root";
+	private static String password = "";
+public Connection getConnection() {
+Connection con = null;
 
-    public Connection getConnection() {
-        Connection con = null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/testdb"; // データベース名をtestdbに変更
-            String user = "root"; // データベースのユーザー名
-            String password = ""; // データベースのパスワード
-            con = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return con;
-    }
+try{
+Class.forName(driverName);
+con = DriverManager.getConnection(url,user,password);
+} catch (ClassNotFoundException e) {
+e.printStackTrace() ;
+} catch (SQLException e) {
+e.printStackTrace() ;
+}
+return con ;
+}
 }
